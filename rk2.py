@@ -4,6 +4,12 @@
 Este script resuelve el pendulo simple usando RK2.
 '''
 
+#El primer error encontrado está en las líneas 42 y 43, el factor 'h' estaba demás: se hace esa
+#multiplicación en la función 'get_k2'.
+#El segundo error es que las funciones quedaban desfazadas (0.5 segundos), esto
+#producto de que la función 'analítica' estaba mal definida (Usaba seno en vez
+#de coseno, así la derivada está calculada corréctamente en la funcion 'f').
+
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -16,7 +22,7 @@ plt.clf()
 
 t = np.linspace(0, 5 * 2 * np.pi / w, 400)
 
-plt.plot(t, A * np.sin(w * t))
+plt.plot(t, A * np.cos(w * t))
 
 
 def f(phi, w):
@@ -33,8 +39,8 @@ def get_k2(phi_n, w_n, h, f):
 
 def rk2_step(phi_n, w_n, h, f):
     k2 = get_k2(phi_n, w_n, h, f)
-    phi_n1 = phi_n + k2[0] * h
-    w_n1 = w_n + k2[1] * h
+    phi_n1 = phi_n + k2[0]
+    w_n1 = w_n + k2[1]
     return phi_n1, w_n1
 
 N_steps = 40000
